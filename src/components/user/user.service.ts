@@ -20,11 +20,18 @@ export class UserService {
   }
 
   async findOneUser(id: string): Promise<User> {
-    return await this.usersRepository.findOne(id);
+    return await this.usersRepository.findOne({ where: { id } });
   }
 
-  async finUserByLogin(login: string): Promise<User> {
-    return await this.usersRepository.findOne(login);
+  async findUserByLogin(login): Promise<User> {
+    const user = {
+      id: 1,
+      username: 'jjj',
+      password: 'anyPassword',
+      isActive: true,
+    };
+
+    if (login === user.username) return user;
   }
 
   async removeUser(id: string): Promise<void> {

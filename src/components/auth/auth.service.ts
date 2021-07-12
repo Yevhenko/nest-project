@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { Redis } from 'ioredis';
+import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  async setDataToRedis(key: string, value: string): Promise<string | null> {
-    return 'OK';
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.userService.findUserByLogin(username);
+    if (user && user.password === password) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 
-  async getDataFromRedis(key: string): Promise<string | null> {
-    return 'OK';
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
-
-  async removeDataFromRedis(key: string): Promise<void> {}
 }

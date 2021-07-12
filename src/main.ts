@@ -1,18 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-
-declare module 'express-session' {
-  interface SessionData {
-    userId: number;
-  }
-}
+import bodyParser from 'body-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-  });
-
+  const app = await NestFactory.create(AppModule);
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
   await app.listen(3000);
 }
 

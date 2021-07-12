@@ -4,7 +4,7 @@ declare global {
   namespace Express {
     interface Request {
       cookies: { 'connect.sid': string };
-      user: User;
+      user?: User | undefined;
     }
   }
 }

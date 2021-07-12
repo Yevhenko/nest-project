@@ -15,6 +15,6 @@
   ],
   "cli": {
     "entitiesDir": "src/components/user/models",
-    "migrationsDir": "src/db/migration"
+    "migrationsDir": "dist/db/migrations/*.js"
   }
 }

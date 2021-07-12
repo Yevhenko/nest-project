@@ -6,15 +6,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstName: string;
+  @Column({ type: 'character', length: 100 })
+  username: string;
 
   @Column()
-  lastName: string;
+  password: string;
 
   @Column({ default: true })
   isActive: boolean;
 
   @OneToMany((type) => Product, (product) => product.user)
-  products: Product[];
+  products?: Product[];
 }
