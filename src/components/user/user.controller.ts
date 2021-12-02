@@ -1,17 +1,13 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
-import { IUser } from './interface';
-import { UserService } from './user.service';
+import { Controller, Get, Query } from '@nestjs/common';
+import { UserService } from '@components/user/user.service';
 
-@Controller('/users')
+@Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-  @Post()
-  async create(@Body() user: IUser) {
-    return await this.userService.createUser(user);
-  }
-
+  constructor(private userService: UserService) {}
   @Get()
-  async getUsers() {
-    return await this.userService.findAllUsers();
+  async findALl(@Query('offset') offset: number, @Query('limit') limit: number) {
+    const users = await this.userService.getUsersFromDb(offset, limit);
+
+    return users;
   }
 }

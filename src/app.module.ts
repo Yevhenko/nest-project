@@ -1,24 +1,20 @@
-import 'reflect-metadata';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { UserModule } from './components/user/user.module';
-import { ProductsModule } from './components/product/products.module';
-import { Connection } from 'typeorm';
-import { AuthModule } from './components/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { JwtAuthGuard } from './components/auth/jwt.auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { UserModule } from '@components/user/user.module';
+import { PostModule } from '@components/post/post.module';
+import { AuthModule } from '@components/auth/auth.module';
+import { AuthMiddleware } from '@components/auth/auth.middleware';
+import { AuthService } from "@components/auth/auth.service";
+import { UserService } from "@components/user/user.service";
+import { UserController } from "@components/user/user.controller";
+import { PostController } from "@components/post/post.controller";
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule, UserModule, ProductsModule],
-  controllers: [AppController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-  ],
+  imports: [TypeOrmModule.forRoot(), UserModule, PostModule, AuthModule],
+  providers: [AuthMiddleware]
 })
-export class AppModule {
-  constructor(private readonly connection: Connection) {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes(UserController, PostController);
+  }
 }

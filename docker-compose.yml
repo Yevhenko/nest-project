@@ -1,13 +1,35 @@
 version: '3'
 services:
+  blog:
+    container_name: blog
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "npm run typeorm:dev migration:run && npm run start"
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/usr/src/app/src
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    restart: always
 
   postgres:
     container_name: postgres
     image: "postgres:9.6.1"
     ports:
-      - 5432:5432
+      - 54321:5432
     environment:
-      POSTGRES_USER: 'user'
-      POSTGRES_PASSWORD: 'password'
-      POSTGRES_DB: 'nestDB'
+      POSTGRES_USER: 'admin'
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'admin'
+    volumes:
+      - ./data_volumes/postgres:/var/lib/postgresql/data
     restart: always
+
+  redis:
+    image: "redis:alpine"

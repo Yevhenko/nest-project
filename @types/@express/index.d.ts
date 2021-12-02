@@ -1,10 +1,11 @@
-import { User } from '../../src/components/user/model/User.entity';
+import { constants } from '@constants/constants';
+import { User } from '@components/user';
 
 declare global {
   namespace Express {
     interface Request {
-      cookies: { 'connect.sid': string };
-      user?: User | undefined;
+      cookies: { [constants.COOKIES_KEY]: string };
+      user: User;
     }
   }
 }
